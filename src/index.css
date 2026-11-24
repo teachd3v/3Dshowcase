@@ -1,0 +1,142 @@
+@import 'tailwindcss';
+@import './styles/tokens.css';
+
+@layer base {
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--bg-canvas);
+    color: var(--ink-primary);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    color-scheme: light;
+  }
+
+  button:not(:disabled),
+  a[href] {
+    cursor: pointer;
+  }
+
+  button:disabled {
+    cursor: not-allowed;
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--ink-primary);
+    outline-offset: 4px;
+  }
+}
+
+.showcase-viewer-shape {
+  border-radius: var(--radius-viewer);
+}
+
+.globe-stage {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  touch-action: pinch-zoom;
+  user-select: none;
+  -webkit-user-select: none;
+  cursor: grab;
+}
+
+.globe-stage.is-dragging,
+.globe-stage.is-dragging .orbit-card {
+  cursor: grabbing;
+}
+
+.orbit-list {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  pointer-events: none;
+}
+
+.orbit-item {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate3d(-9999px, 0, 0);
+  will-change: transform, opacity;
+  pointer-events: none;
+}
+
+.orbit-card {
+  pointer-events: auto;
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  border-radius: clamp(18px, 2vw, 28px);
+  overflow: hidden;
+  background-color: var(--surface-placeholder);
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.06), 0 8px 24px rgb(0 0 0 / 0.08);
+  cursor: pointer;
+  transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.orbit-card:hover,
+.orbit-card:focus-visible {
+  transform: scale(1.06);
+}
+
+.orbit-card:hover img,
+.orbit-card:focus-visible img {
+  filter: none !important;
+}
+
+.orbit-card:focus-visible {
+  outline: 2px solid var(--ink-primary);
+  outline-offset: 3px;
+}
+
+.globe-stage.is-dragging .orbit-card {
+  transform: none;
+}
+
+.orbit-item:has(.orbit-card:focus-visible) {
+  z-index: 1000 !important;
+  opacity: 1 !important;
+}
+
+.orbit-card img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition:
+    opacity 0.5s ease,
+    filter 0.15s linear;
+  -webkit-user-drag: none;
+}
+
+.orbit-card img.is-loaded {
+  opacity: 1;
+}
+
+.lightbox-backdrop {
+  background-color: var(--surface-lightbox);
+  backdrop-filter: blur(28px) saturate(0.84);
+  -webkit-backdrop-filter: blur(28px) saturate(0.84);
+}
+
+.nav-backdrop {
+  background-color: var(--surface-nav-blur);
+  backdrop-filter: blur(14px) saturate(1.08);
+  -webkit-backdrop-filter: blur(14px) saturate(1.08);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .orbit-card,
+  .orbit-card img {
+    transition: none;
+  }
+}
